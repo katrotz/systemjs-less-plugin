@@ -33,16 +33,7 @@ if (typeof window !== 'undefined') {
             filename: url,
             rootpath: url.replace(/[^\/]*$/, '')
           }).then(function (data) {
-            //inject it into the head as a style tag
-            var style = document.createElement('style');
-            style.textContent = data.css + '/*# sourceURL=' + url + '*/';
-            style.setAttribute('type', 'text/css');
-            //store original type in the data-type attribute
-            style.setAttribute('data-type', 'text/less');
-            //store the url in the data-href attribute
-            style.setAttribute('data-href', url);
-            head.appendChild(style);
-            resolve('');
+            resolve(data.css);
           });
 
         } else {
@@ -73,6 +64,35 @@ if (typeof window !== 'undefined') {
       return loadStyle(load.address, less_browser);
     });
 
+  };
+
+  exports.translate = function(load) {
+    // Read SystemJS configurations of the plugin
+    var lessOptions = this.lessOptions || {};
+
+    var appendStyles = lessOptions.append;
+
+    if (appendStyles) {
+      //inject it into the head as a style tag
+      var style = document.createElement('style');
+      style.textContent = load.source + '/*# sourceURL=' + load.address + '*/';
+      style.setAttribute('type', 'text/css');
+      //store original type in the data-type attribute
+      style.setAttribute('data-type', 'text/less');
+      //store the url in the data-href attribute
+      style.setAttribute('data-href', load.address);
+      head.appendChild(style);
+
+      load.metadata.format = 'defined';
+    } else {
+      if (this.builder || this.transpiler) {
+        load.metadata.format = 'esm';
+        return 'export default ' + JSON.stringify(load.source) + ';';
+      }
+
+      load.metadata.format = 'amd';
+      return 'def' + 'ine(function() {\nreturn ' + JSON.stringify(load.source) + ';\n});';
+    }
   };
 } else {
 
