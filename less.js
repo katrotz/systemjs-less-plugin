@@ -96,34 +96,34 @@ if (typeof window !== 'undefined') {
   };
 } else {
 
-  var getBuilder = function (loader) {
-    return loader.import('./less-builder.js', {
-      name: module.id
-    });
-  };
-
-
-  // setting format = 'defined' means we're managing our own output
-  exports.translate = function (load) {
-    load.metadata.format = 'defined';
-  };
-
-  exports.bundle = function (loads, opts) {
-    var _this = this;
-    if (_this.buildCSS === false) {
-      return '';
-    }
-    return getBuilder(_this)
-      .then(function (builder) {
-        return builder.bundle.call(_this, loads, opts);
-      });
-  };
-
-  exports.listAssets = function (loads, compileOpts, outputOpts) {
-    var _this = this;
-    return getBuilder(_this)
-      .then(function (builder) {
-        return builder.listAssets.call(_this, loads, compileOpts, outputOpts);
-      });
-  };
+  // var getBuilder = function (loader) {
+  //   return loader.import('./less-builder.js', {
+  //     name: module.id
+  //   });
+  // };
+  //
+  //
+  // // setting format = 'defined' means we're managing our own output
+  // exports.translate = function (load) {
+  //   load.metadata.format = 'defined';
+  // };
+  //
+  // exports.bundle = function (loads, opts) {
+  //   var _this = this;
+  //   if (_this.buildCSS === false) {
+  //     return '';
+  //   }
+  //   return getBuilder(_this)
+  //     .then(function (builder) {
+  //       return builder.bundle.call(_this, loads, opts);
+  //     });
+  // };
+  //
+  // exports.listAssets = function (loads, compileOpts, outputOpts) {
+  //   var _this = this;
+  //   return getBuilder(_this)
+  //     .then(function (builder) {
+  //       return builder.listAssets.call(_this, loads, compileOpts, outputOpts);
+  //     });
+  // };
 }
